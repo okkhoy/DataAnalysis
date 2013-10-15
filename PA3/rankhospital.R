@@ -1,4 +1,4 @@
-best <- function(state, outcome) {
+rankhospital <- function(state, outcome, num = "best") {
   
   outcomes <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   states <- table(outcomes$State)
@@ -20,22 +20,26 @@ best <- function(state, outcome) {
   x<- outcomes[grepl(state, outcomes$State),]
   y<-x
   outcomes <- x
-  #hospName <- which(names(outcomes) == "Hospital.Name")
   hospName <- 2
+  
+  
   ailment <- outcomes[ , c(hospName, causeIndex)]
   ailment[,2] <-suppressWarnings(as.numeric(ailment[,2]))
   
   ailment <- ailment[complete.cases(ailment),]
-  minimum <- max(ailment[,1])
+  minimum <- max(ailment[,2])
   hospName <- character(0)
   
-  for(i in 1:nrow(ailment)) {
-    
-    if(ailment[i,2] <= minimum) {
-      minimum <- ailment[i,2] 
-      hospName <- ailment[i,1]  
-    }
+  ordered_ailment <- ailment[order(ailment[,2],rev(ailment[,1]), decreasing =FALSE),]
+  
+  if(num == "best") {
+    return (ordered_ailment[1,1])
+  } else if (num == "worst") {
+    return (ordered_ailment[nrow(ordered_ailment),1])
+  } else {
+    return (ordered_ailment[num, 1])
+    #ordered_ailment[, "Rank"] <- c(1:nrow(ordered_ailment))
   }
   
-  return(hospName)
+  return(NA)
 }
