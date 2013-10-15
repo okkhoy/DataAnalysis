@@ -3,15 +3,16 @@ outcome[, 11] <- as.numeric(outcome[, 11])
 
 outcome_states <- table(outcome$State)
 outcome_state_gt20 <- outcome_states[outcome_states > 20]
-
-outcome2 <- outcome[outcome$State == names(outcome_state_gt20)]
 states <- names(outcome_state_gt20)
 
-for(entry in outcome){
-  for (i in length(states)) {
-    if (entry$State == states[i])
-      print (entry$State)
-  } 
-} 
+outcome2 <- data.frame()
 
-mapply()
+for(i in 1:length(states)) {
+  x<- outcome[grepl(states[i], outcome$State),]
+  length(x)
+  outcome2<- rbind(outcome2, x)
+}
+
+death <- outcome2[, 11]
+state<- outcome2$State
+boxplot(death ~ state)
