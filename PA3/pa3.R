@@ -13,3 +13,5 @@ for(entry in outcome){
       print (entry$State)
   } 
 } 
+
+mapply()
